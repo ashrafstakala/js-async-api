@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const btn = document.querySelector('.btn-country');
-const countriesContainer = document.querySelector('.countries');
+const btn = document.querySelector(".btn-country");
+const countriesContainer = document.querySelector(".countries");
 
 ///////////////////////////////////////
 // const getCountryData = function (country) {
@@ -47,7 +47,7 @@ const renderCountry = function (data, className) {
     <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
   </div>
 </article>`;
-  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.insertAdjacentHTML("beforeend", html);
   countriesContainer.style.opacity = 1;
 };
 
@@ -76,10 +76,19 @@ const renderCountry = function (data, className) {
 // };
 
 const getCountryData = function (country) {
+  // Country 1
   fetch(`https://restcountries.com/v2/name/${country}`)
-    .then(response => response.json())
-    .then(data => renderCountry(data[0]));
+    .then((response) => response.json())
+    .then((data) => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders[0];
+
+      if (!neighbour) return;
+
+      // Country 2
+      return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
+    })
+    .then((response) => response.json())
+    .then((data) => renderCountry(data, "neighbour"));
 };
-getCountryData('germany');
-getCountryData('france');
-getCountryData('portugal');
+getCountryData("portugal");
